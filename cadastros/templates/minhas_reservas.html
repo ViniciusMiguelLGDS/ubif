@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Minhas Reservas</h2>
+
+    {% for reserva in reservas %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">{{ reserva.oferta.origem }} → {{ reserva.oferta.destino }}</h5>
+            <p class="card-text"><strong>Data:</strong> {{ reserva.oferta.data_hora }}</p>
+            <p class="card-text"><strong>Status:</strong> {{ reserva.get_status_display }}</p>
+
+            {% if reserva.status == 'pendente' %}
+            <form method="POST" action="{% url 'cancelar_reserva' reserva.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Cancelar</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <p>Você não possui reservas ativas.</p>
+    {% endfor %}
+</div>
+{% endblock %}

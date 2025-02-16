@@ -1,0 +1,29 @@
+{% extends 'master.html' %}
+
+{% block conteudo %}
+<div class="container">
+    <h2>Alterar Senha</h2>
+    <form id="formAlterarSenha" method="POST" action="{% url 'cadastros:mudar_senha' %}">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="txtNovaSenha">Nova senha</label>
+            <input type="password" class="form-control" id="txtNovaSenha" name="txtNovaSenha" required>
+        </div>
+
+        <div class="form-group">
+            <label for="txtSenha">Senha atual</label>
+            <input type="password" class="form-control" id="txtSenha" name="txtSenha" required>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmar_senha">Confirmar senha</label>
+            <input type="password" class="form-control" id="confirmar_senha" name="confirmar_senha" required>
+        </div>
+
+        <input type="hidden" name="is_active" value="True">
+
+        <button type="submit" class="btn btn-success w-100" name="btnAcao" id="btnAcao" value="alterar_senha">Alterar senha</button>
+    </form>
+</div>
+{% endblock %}

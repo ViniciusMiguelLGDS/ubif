@@ -1,0 +1,39 @@
+{% extends 'master.html' %}
+
+{% load static %}
+
+{% block conteudo %}
+<div class="container mt-5">
+    <h2 class="mb-4">Encontre uma Carona</h2>
+    
+    <form method="GET" action="{% url 'lista_ofertas' %}">
+        <div class="row">
+            <div class="col-md-3">
+                <label for="origem">De:</label>
+                <input type="text" class="form-control" id="origem" name="origem" placeholder="Origem">
+            </div>
+            <div class="col-md-3">
+                <label for="destino">Para:</label>
+                <input type="text" class="form-control" id="destino" name="destino" placeholder="Destino">
+            </div>
+            <div class="col-md-3">
+                <label for="data">Data:</label>
+                <input type="date" class="form-control" id="data" name="data">
+            </div>
+            <div class="col-md-2">
+                <label for="passageiros">Passageiros:</label>
+                <input type="number" class="form-control" id="passageiros" name="passageiros" min="1">
+            </div>
+            <div class="col-md-1 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="container mt-4">
+    <img src="{% static 'img/carro.jpg' %}" 
+        alt="Logomarca do Sistema de Caronas"
+        style="width: 75%;">
+</div>
+{% endblock %}

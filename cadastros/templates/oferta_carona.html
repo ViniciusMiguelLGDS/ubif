@@ -1,0 +1,45 @@
+{% extends 'master.html' %}
+
+{% block conteudo %}
+<div class="container mt-5">
+    <h2 class="mb-4">Oferecer uma Carona</h2>
+    
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="txtOrigem" class="form-label">Origem</label>
+            <input type="text" class="form-control" id="txtOrigem" name="txtOrigem" placeholder="Ex: IFMG Campus Bambuí" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="txtDestino" class="form-label">Destino</label>
+            <input type="text" class="form-control" id="txtDestino" name="txtDestino" placeholder="Ex: Belo Horizonte" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="txtData_hora" class="form-label">Data e Hora</label>
+            <input type="datetime-local" class="form-control" id="txtData_hora" name="txtData_hora" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="txtVagas" class="form-label">Número de Vagas</label>
+            <input type="number" class="form-control" id="txtVagas" name="txtVagas" min="1" placeholder="Ex: 3" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="txtValor" class="form-label">Valor de cada vaga (R$)</label>
+            <input type="number" class="form-control" id="txtValor" name="txtValor" min="1" step="0.01" placeholder="Ex: 25.50" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="txtDescricao" class="form-label">Descrição (Opcional)</label>
+            <textarea class="form-control" id="txtDescricao" name="txtDescricao" rows="3" placeholder="Ex: Levo apenas mochilas pequenas"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100" name="btnAcao" id="btnAcao" value="oferecer_carona" aria-label="Oferecer Carona">
+            Publicar Carona
+        </button>
+    </form>
+</div>
+{% endblock %}

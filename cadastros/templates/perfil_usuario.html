@@ -1,0 +1,26 @@
+{% extends 'master.html' %}
+
+{% load static %}  <!-- Load static files at the top of the template -->
+
+{% block conteudo %}
+<div class="container text-center">
+    <h2 class="mb-4">Perfil de {{ user.nome }}</h2>
+    <div class="d-flex justify-content-center">
+        <div class="card mt-3" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">Perfil do Usuário</h5>
+                {% if user.foto %}
+                    <img src="{{ user.foto.url }}" alt="Foto de Perfil" width="70%">
+                {% else %}
+                    <img src="{% static 'img/icon_profile.png' %}" alt="Foto Padrão" width="70%" >
+                {% endif %}
+                <p class="card-text"><strong>Nome:</strong> {{ user.nome }}</p>
+                <p class="card-text"><strong>Email:</strong> {{ user.email }}</p>
+                <p class="card-text"><strong>Telefone:</strong> {{ user.telefone }}</p>
+                <a href="{% url 'cadastros:editar_perfil' %}" class="btn btn-success w-100">Editar Perfil</a><br><br>
+                <a href="{% url 'cadastros:editar_senha' %}" class="btn btn-secondary w-100">Mudar Senha</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

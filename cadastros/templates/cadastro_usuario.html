@@ -1,0 +1,107 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block conteudo %}
+<div class="container">
+    <h2>Cadastro</h2>
+    <form id="formCadastro" method="POST" action="{% url 'cadastros:cadastro_usuario' %}">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="txtNome">Nome completo</label>
+            <input type="text" class="form-control" id="txtNome" name="txtNome" required>
+        </div>
+
+        <div class="form-group">
+            <label for="txtEmail">E-mail institucional</label>
+            <input type="email" class="form-control" id="txtEmail" name="txtEmail" required>
+        </div>
+
+        <div class="form-group">
+            <label for="txtTelefone">Telefone</label>
+            <input type="text" class="form-control" id="txtTelefone" name="txtTelefone" pattern="\(\d{2}\) \d{4,5}-\d{4}" placeholder="(99) 99999-9999" required>
+        </div>
+
+        <div class="form-group">
+            <label for="txtSenha">Senha</label>
+            <input type="password" class="form-control" id="txtSenha" name="txtSenha" required>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmar_senha">Confirmar senha</label>
+            <input type="password" class="form-control" id="confirmar_senha" name="confirmar_senha" required>
+        </div>
+
+        <input type="hidden" name="is_active" value="True">
+
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="termos" required>
+            <label class="form-check-label" for="termos">
+                Li e aceito os <a href="#" data-bs-toggle="modal" data-bs-target="#modalTermos">Termos de Uso</a>.
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100" name="btnAcao" id="btnAcao" value="Novo_Usuario">Cadastrar Usuário</button>
+    </form>
+
+    <div class="mt-3 text-center">
+        <p>Já tem conta? <a href="{% url 'autenticacao:login' %}" class="btn btn-light">Faça login</a></p>
+    </div>
+</div>
+
+<!-- Modal - Termos de Uso -->
+<div class="modal fade" id="modalTermos" tabindex="-1" aria-labelledby="modalTermosLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modalTermosLabel">Termos de Uso</h5>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <p>Ao utilizar o IFMG Carona, você concorda com os seguintes termos:</p>
+                <ul>
+                    <li>O serviço é destinado apenas para membros do IFMG.</li>
+                    <li>Você é responsável pela veracidade das informações fornecidas.</li>
+                    <li>O compartilhamento de viagens deve ser feito de forma segura e respeitosa.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#formCadastro').submit(function (event) {
+            let nome = $('#txtNome').val().trim();
+            let email = $('#txtEmail').val().trim();
+            let telefone = $('#txtTelefone').val().trim();
+            let senha = $('#txtSenha').val();
+            let confirmarSenha = $('#confirmar_senha').val();
+            
+            if (nome === "" || email === "" || telefone === "" || senha === "" || confirmarSenha === "") {
+                toastr.error("Todos os campos devem ser preenchidos.", "Erro");
+                event.preventDefault();
+                return;
+            }
+
+            if (!telefone.match(/^\(\d{2}\) \d{4,5}-\d{4}$/)) {
+                toastr.warning("Formato de telefone inválido. Use (99) 99999-9999.", "Aviso");
+                event.preventDefault();
+                return;
+            }
+
+            if (senha.length < 6) {
+                toastr.warning("A senha deve ter no mínimo 6 caracteres.", "Aviso");
+                event.preventDefault();
+                return;
+            }
+
+            if (senha !== confirmarSenha) {
+                toastr.error("As senhas não coincidem.", "Erro");
+                event.preventDefault();
+                return;
+            }
+        });
+    });
+</script>
+{% endblock %}

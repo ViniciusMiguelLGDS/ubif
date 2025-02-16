@@ -1,0 +1,63 @@
+{% extends 'master.html' %}
+{% load static %}  <!-- Adicionado para carregar arquivos estáticos -->
+
+{% block conteudo %}
+<div class="container">
+    <h2>Alterar Perfil</h2>
+    <form id="formAlterarPerfil" method="POST" action="{% url 'cadastros:editar_usuario' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-group text-center">
+            <label>Foto de Perfil</label>
+            <br>
+            {% if user.foto %}
+                <img src="{{ user.foto.url }}" alt="Foto de Perfil" class="img-thumbnail mb-2" style="width: 150px; height: 150px; object-fit: cover;">
+            {% else %}
+                <img src="{% static 'img/icon_profile.png' %}" alt="Foto Padrão" class="img-thumbnail mb-2" style="width: 150px; height: 150px; object-fit: cover;">
+            {% endif %}
+            <input type="file" name="foto" accept="image/*" class="form-control mt-2">
+        </div>
+
+        <div class="form-group">
+            <label for="txtNome">Nome completo</label>
+            <input type="text" class="form-control" id="txtNome" name="txtNome" value="{{ user.nome }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="txtEmail">E-mail institucional</label>
+            <input type="email" class="form-control" id="txtEmail" name="txtEmail" value="{{ user.email }}" readonly>
+            <small class="form-text text-muted">O e-mail não pode ser alterado diretamente.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="txtTelefone">Telefone</label>
+            <input type="tel" class="form-control" id="txtTelefone" name="txtTelefone" value="{{ user.telefone }}" placeholder="Ex: (99) 99999-9999" required>
+        </div>
+
+        <div class="form-group">
+            <label for="txtSenha">Senha atual para confirmar alterações</label>
+            <input type="password" class="form-control" id="txtSenha" name="txtSenha" minlength="6" required>
+            <small class="form-text text-muted">Mínimo de 6 caracteres.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmar_senha">Confirmar senha</label>
+            <input type="password" class="form-control" id="confirmar_senha" name="confirmar_senha" minlength="6" required>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100" name="btnAcao" id="btnAcao" value="alterar_usuario">Alterar perfil</button>
+    </form>
+</div>
+
+<!-- Importação do jQuery e jQuery Mask -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+<!-- Aplicando a máscara ao campo de telefone -->
+<script>
+    $(document).ready(function(){
+        $('#txtTelefone').mask('(00) 00000-0000');
+    });
+</script>
+
+{% endblock %}
