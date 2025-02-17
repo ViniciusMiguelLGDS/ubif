@@ -4,6 +4,8 @@ from django.contrib import messages
 from cadastros.models import OfertaCarona, Usuario
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.utils.crypto import get_random_string
+import os
 
 def cadastro_usuario(request):
     if request.method == 'POST':
@@ -122,8 +124,10 @@ def editar_usuario(request):
         usuario.email = email
         usuario.telefone = telefone
 
-        # Se uma nova foto foi enviada, substitui a antiga
+        # Se uma nova foto foi enviada, renomeia com o e-mail do usuário
         if foto:
+            # Renomeia o arquivo para o email do usuário
+            foto.name = f"{usuario.email}.jpg"  # ou .png dependendo do formato da imagem
             if usuario.foto:  # Remove a foto antiga se já existir
                 usuario.foto.delete(save=False)
             usuario.foto = foto  # Atualiza a foto
