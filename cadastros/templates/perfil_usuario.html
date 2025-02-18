@@ -17,8 +17,10 @@
                 <p class="card-text"><strong>Nome:</strong> {{ user.nome }}</p>
                 <p class="card-text"><strong>Email:</strong> {{ user.email }}</p>
                 <p class="card-text"><strong>Telefone:</strong> {{ user.telefone }}</p>
+                <p class="card-text"><strong>Status:</strong> {{ user.is_admin }}</p>
                 <a href="{% url 'cadastros:editar_perfil' %}" class="btn btn-success w-100">Editar Perfil</a><br><br>
-                <a href="{% url 'cadastros:editar_senha' %}" class="btn btn-secondary w-100">Mudar Senha</a>
+                <a href="{% url 'cadastros:editar_senha' %}" class="btn btn-secondary w-100">Mudar Senha</a><br><br>
+                <a href="{% url 'cadastros:excluir_conta' %}" class="btn btn-danger w-100">Excluir conta</a>
             </div>
         </div>
     </div>

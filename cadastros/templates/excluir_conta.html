@@ -1,0 +1,43 @@
+{% extends 'master.html' %}
+
+{% block conteudo %}
+<div class="container">
+    <h2 align="center">Formulário Para Excluir Conta</h2>
+    <form id="formExcluirConta" method="POST" action="{% url 'cadastros:apagar_conta' %}">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="txtNome">Nome completo</label>
+            <input type="text" class="form-control" id="txtNome" name="txtNome" required>
+        </div>
+
+        <div class="form-group">
+            <label for="txtEmail">E-mail institucional</label>
+            <input type="email" class="form-control" id="txtEmail" name="txtEmail" required>
+        </div>
+
+        <div class="form-group">
+            <label for="txtSenha">Senha atual</label>
+            <input type="password" class="form-control" id="txtSenha" name="txtSenha" required>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmar_senha">Confirmar senha</label>
+            <input type="password" class="form-control" id="confirmar_senha" name="confirmar_senha" required>
+        </div>
+
+        <input type="hidden" name="is_active" value="True">
+
+        <button type="submit" class="btn btn-success w-100" name="btnAcao" id="btnAcao" value="excluir_conta">Excluir Conta</button>
+    </form>
+</div>
+
+<script>
+document.getElementById("formExcluirConta").addEventListener("submit", function(event) {
+    var confirmacao = confirm("Tem certeza de que deseja continuar?");
+    if (!confirmacao) {
+        event.preventDefault(); // Impede o envio do formulário
+    }
+});
+</script>
+{% endblock %}

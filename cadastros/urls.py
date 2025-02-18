@@ -17,4 +17,6 @@ urlpatterns = [
     path('editar_usuario/', views.editar_usuario, name='editar_usuario'), #confirma a edição do perfil
     path('editar_senha/', views.editar_senha, name='editar_senha'),
     path('mudar_senha/', views.mudar_senha, name='mudar_senha'), #confirma edição de senha
+    path('excluir_conta/', views.excluir_conta, name="excluir_conta"),
+    path('apagar_conta/', views.apagar_conta, name='apagar_conta'), #confirma exclusão de conta
 ]

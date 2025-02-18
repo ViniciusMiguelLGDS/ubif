@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, logout
 from django.contrib import messages
 from cadastros.models import OfertaCarona, Usuario
 from django.contrib.auth.decorators import login_required
@@ -155,12 +155,12 @@ def mudar_senha(request):
         senha_atual = request.POST.get('txtSenha')  # Renomeei para deixar mais claro
         confirmar_senha = request.POST.get('confirmar_senha')
 
-        # Verifica se a senha atual está correta
+        #verifica se a senha atual está correta
         if not usuario.check_password(senha_atual):
             messages.error(request, 'Senha atual incorreta! As alterações não foram salvas.')
             return redirect('cadastros:editar_senha')
         
-        # Verifica se as senhas são iguais
+        #verifica se as senhas são iguais
         if nova_senha == confirmar_senha:
             messages.error(request, 'As novas senhas não iguais!')
             return redirect('cadastros:editar_senha')
@@ -169,19 +169,55 @@ def mudar_senha(request):
             messages.error(request, 'A nova senha é muito curta!')
             return redirect('cadastros:editar_senha')
         
-        # Altera a senha de forma segura
+        #altera a senha
         usuario.set_password(nova_senha)
 
         try:
             usuario.save()
             messages.success(request, 'Senha atualizada com sucesso!')
             
-            # Reautentica o usuário para evitar logout
+            #reautentica o usuário (sem logout)
             from django.contrib.auth import update_session_auth_hash
             update_session_auth_hash(request, usuario)
 
-            return redirect('cadastros:perfil_usuario')  # Redireciona para o perfil atualizado
+            return redirect('cadastros:perfil_usuario')  #redireciona para o perfil
         except Exception as e:
             messages.error(request, f'Ocorreu um erro ao atualizar a senha: {str(e)}')
 
     return render(request, 'editar_senha.html', {'user': usuario})
+
+#EXCLUIR CONTA
+@login_required
+def excluir_conta(request):
+    return render(request, 'excluir_conta.html')
+
+@login_required
+def apagar_conta(request):
+    usuario = request.user
+
+    if request.method == 'POST':
+        nome = request.POST.get('txtNome')
+        email = request.POST.get('txtEmail')
+        senha = request.POST.get('txtSenha')
+        confirmar_senha = request.POST.get('confirmar_senha')
+
+        #autentica o usuário
+        usuario_autenticado = authenticate(request, username=usuario.email, password=confirmar_senha)
+        if usuario_autenticado is None:
+            messages.error(request, 'Senha incorreta! A conta não foi excluída.')
+            return redirect('cadastros:editar_perfil')
+
+        #verifica se as senhas são iguais
+        if senha != confirmar_senha:
+            messages.error(request, 'Senhas diferentes! A conta não foi excluída.')
+            return redirect('cadastros:editar_perfil')
+
+        try:
+            usuario.delete()  #exclui o usuário
+            logout(request)  #faz logout para encerrar a sessão (puxe no contrib.auth)
+            messages.success(request, 'Conta excluída com sucesso!')
+            return redirect('/')  #redireciona para a home
+        except Exception as e:
+            messages.error(request, f'Ocorreu um erro ao excluir a conta: {str(e)}')
+
+    return render(request, 'excluir_conta.html', {'user': usuario})
