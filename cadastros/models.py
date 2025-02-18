@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.conf import settings
 import os
 
 # Gerenciador de Usuário Personalizado
@@ -19,12 +20,6 @@ class UsuarioManager(BaseUserManager):
         return user
 
 # Modelo de Usuário
-from django.db import models
-from django.contrib.auth.models import AbstractBaseUser
-from django.conf import settings
-import os
-
-# Modelo de Usuário
 class Usuario(AbstractBaseUser):
     nome = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
@@ -32,6 +27,7 @@ class Usuario(AbstractBaseUser):
     foto = models.ImageField(upload_to='usuarios_fotos/', blank=True, null=True)  # Adiciona o campo de foto
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+    theme_preference = models.BooleanField(default=True)
 
     objects = UsuarioManager()
 
