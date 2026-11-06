@@ -86,12 +86,18 @@ LOGIN_REDIRECT_URL = 'core:main'
 LOGOUT_REDIRECT_URL = 'autenticacao:login'
 LOGIN_URL = 'autenticacao:login'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# E-mail: configure EMAIL_HOST_USER e EMAIL_HOST_PASSWORD como variáveis de ambiente.
+# Sem elas, os e-mails (ex.: redefinir senha) aparecem no terminal do runserver.
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'juanamorimlp@gmail.com'
-EMAIL_HOST_PASSWORD = 'jtxe zauk rqtq vaee'  # Substitua pela sua senha real
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+EMAIL_BACKEND = (
+    'django.core.mail.backends.smtp.EmailBackend' if EMAIL_HOST_USER
+    else 'django.core.mail.backends.console.EmailBackend'
+)
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER or 'IFMG Carona <noreply@ifmgcarona.local>'
 
 WSGI_APPLICATION = "config.wsgi.application"
 

@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from cadastros.models import Usuario
-from django.contrib.auth.views import PasswordResetView
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView
 
 def login(request):
     if request.method == 'POST':
@@ -48,7 +48,7 @@ class MyPasswordReset(PasswordResetView):
     subject_template_name = 'password_reset_subject.txt'
     success_url = reverse_lazy('autenticacao:password_reset_done')
 
-class MyPasswordResetDone(PasswordResetView):
+class MyPasswordResetDone(PasswordResetDoneView):
     template_name = 'password_reset_done.html'
     
 

@@ -5,24 +5,24 @@
 {% block conteudo %}
 <div class="container mt-5">
     <h2 class="mb-4">Encontre uma Carona</h2>
-    
-    <form method="GET" action="{% url 'lista_ofertas' %}">
+
+    <form method="GET" action="{% url 'cadastros:listar_caronas' %}">
         <div class="row">
             <div class="col-md-3">
                 <label for="origem">De:</label>
-                <input type="text" class="form-control" id="origem" name="origem" placeholder="Origem">
+                <input type="text" class="form-control" id="origem" name="origem" placeholder="Origem" value="{{ filtros.origem }}">
             </div>
             <div class="col-md-3">
                 <label for="destino">Para:</label>
-                <input type="text" class="form-control" id="destino" name="destino" placeholder="Destino">
+                <input type="text" class="form-control" id="destino" name="destino" placeholder="Destino" value="{{ filtros.destino }}">
             </div>
             <div class="col-md-3">
                 <label for="data">Data:</label>
-                <input type="date" class="form-control" id="data" name="data">
+                <input type="date" class="form-control" id="data" name="data" value="{{ filtros.data }}">
             </div>
             <div class="col-md-2">
                 <label for="passageiros">Passageiros:</label>
-                <input type="number" class="form-control" id="passageiros" name="passageiros" min="1">
+                <input type="number" class="form-control" id="passageiros" name="passageiros" min="1" value="{{ filtros.passageiros }}">
             </div>
             <div class="col-md-1 d-flex align-items-end">
                 <button type="submit" class="btn btn-primary">Buscar</button>
@@ -32,8 +32,26 @@
 </div>
 
 <div class="container mt-4">
-    <img src="{% static 'img/carro.jpg' %}" 
-        alt="Logomarca do Sistema de Caronas"
-        style="width: 75%;">
+    {% for oferta in ofertas %}
+    <div class="card mb-3">
+        <div class="card-body d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <h5 class="card-title mb-1">{{ oferta.origem }} → {{ oferta.destino }}</h5>
+                <p class="mb-1 text-muted">
+                    {{ oferta.data_hora|date:"d/m/Y H:i" }} &middot; Motorista: {{ oferta.motorista.nome }}
+                </p>
+                <p class="mb-0">
+                    R$ {{ oferta.valor|floatformat:2 }} por vaga &middot;
+                    {{ oferta.vagas_disponiveis }} vaga{{ oferta.vagas_disponiveis|pluralize }} disponível{{ oferta.vagas_disponiveis|pluralize:"is" }}
+                </p>
+                {% if oferta.descricao %}<small class="text-muted">{{ oferta.descricao }}</small>{% endif %}
+            </div>
+            <a href="{% url 'cadastros:reservar_carona' oferta.id %}" class="btn btn-primary">Reservar</a>
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-center text-secondary">Nenhuma carona encontrada para esta busca.</p>
+    <img src="{% static 'img/carro.jpg' %}" alt="Logomarca do Sistema de Caronas" class="img-fluid d-block mx-auto" style="width: 75%;">
+    {% endfor %}
 </div>
 {% endblock %}

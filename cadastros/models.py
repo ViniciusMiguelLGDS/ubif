@@ -49,11 +49,10 @@ class Usuario(AbstractBaseUser):
 
     def delete(self, *args, **kwargs):
         """Remove a foto do diretório ao deletar o usuário"""
-        if self.foto:
-            foto_path = os.path.join(settings.MEDIA_ROOT, self.foto.name)
-            if os.path.exists(foto_path):
-                os.remove(foto_path)
-        super().delete(*args, **kwargs)
+        foto_path = os.path.join(settings.MEDIA_ROOT, self.foto.name) if self.foto else None
+        super().delete(*args, **kwargs)  # pode levantar ProtectedError: só apaga a foto se deu certo
+        if foto_path and os.path.exists(foto_path):
+            os.remove(foto_path)
 
 
 # Modelo de Oferta de Carona
@@ -63,6 +62,7 @@ class OfertaCarona(models.Model):
     destino = models.CharField(max_length=100)
     data_hora = models.DateTimeField()
     vagas_ofertadas = models.PositiveIntegerField(default=0)
+    valor = models.DecimalField(max_digits=8, decimal_places=2, default=0)  # valor de cada vaga (R$)
     descricao = models.TextField(blank=True, null=True)
     status = models.CharField(
         max_length=20,
@@ -73,8 +73,9 @@ class OfertaCarona(models.Model):
     data_atualizacao = models.DateTimeField(auto_now=True)
 
     def vagas_disponiveis(self):
-        reservas_confirmadas = self.reservas.filter(status='confirmada').count()
-        return self.vagas_ofertadas - reservas_confirmadas
+        # reservas pendentes também seguram a vaga, para não haver overbooking
+        reservas_ativas = self.reservas.filter(status__in=['pendente', 'confirmada']).count()
+        return max(self.vagas_ofertadas - reservas_ativas, 0)
 
     def __str__(self):
         return f"{self.origem} -> {self.destino} ({self.data_hora})"

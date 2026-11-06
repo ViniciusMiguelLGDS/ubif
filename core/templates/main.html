@@ -28,10 +28,29 @@
 {% endblock %}
 
 {% block conteudo %}
-<div class="container mt-5">
-    <h3 class="text-center text-secondary">Carregando caronas disponíveis...</h3>
-    <div id="lista-caronas" class="text-center">
-        <!-- Aqui serão carregadas as caronas via AJAX -->
+<div class="container mt-4">
+    <h3 class="mb-3">Próximas caronas</h3>
+
+    {% for oferta in ofertas %}
+    <div class="card mb-3">
+        <div class="card-body d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <h5 class="card-title mb-1">{{ oferta.origem }} → {{ oferta.destino }}</h5>
+                <p class="mb-0 text-muted">
+                    {{ oferta.data_hora|date:"d/m/Y H:i" }} &middot; Motorista: {{ oferta.motorista.nome }}
+                    &middot; R$ {{ oferta.valor|floatformat:2 }} por vaga
+                    &middot; {{ oferta.vagas_disponiveis }} vaga{{ oferta.vagas_disponiveis|pluralize }}
+                </p>
+            </div>
+            {% if user.is_authenticated %}
+                <a href="{% url 'cadastros:reservar_carona' oferta.id %}" class="btn btn-primary">Reservar</a>
+            {% else %}
+                <a href="{% url 'autenticacao:login' %}" class="btn btn-outline-primary">Entre para reservar</a>
+            {% endif %}
+        </div>
     </div>
+    {% empty %}
+    <p class="text-center text-secondary">Nenhuma carona disponível no momento.</p>
+    {% endfor %}
 </div>
 {% endblock %}

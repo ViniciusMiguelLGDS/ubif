@@ -1,20 +1,23 @@
-{% extends 'base.html' %}
+{% extends 'master.html' %}
 
-{% block content %}
+{% block conteudo %}
 <div class="container mt-5">
     <h2 class="mb-4">Reservar Carona</h2>
 
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">{{ oferta.origem }} → {{ oferta.destino }}</h5>
-            <p class="card-text"><strong>Data:</strong> {{ oferta.data_hora }}</p>
+            <p class="card-text"><strong>Data:</strong> {{ oferta.data_hora|date:"d/m/Y H:i" }}</p>
+            <p class="card-text"><strong>Valor da vaga:</strong> R$ {{ oferta.valor|floatformat:2 }}</p>
             <p class="card-text"><strong>Vagas Disponíveis:</strong> {{ oferta.vagas_disponiveis }}</p>
             <p class="card-text"><strong>Motorista:</strong> {{ oferta.motorista.nome }}</p>
+            {% if oferta.descricao %}<p class="card-text"><strong>Observações:</strong> {{ oferta.descricao }}</p>{% endif %}
 
             {% if oferta.vagas_disponiveis > 0 %}
             <form method="POST">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-primary">Confirmar Reserva</button>
+                <a href="{% url 'cadastros:listar_caronas' %}" class="btn btn-light">Voltar</a>
             </form>
             {% else %}
             <button class="btn btn-danger" disabled>Sem vagas disponíveis</button>

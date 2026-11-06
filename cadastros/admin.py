@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import Usuario, OfertaCarona, ReservaCarona
 
-# Register your models here.
+admin.site.register(Usuario)
+admin.site.register(OfertaCarona)
+admin.site.register(ReservaCarona)
